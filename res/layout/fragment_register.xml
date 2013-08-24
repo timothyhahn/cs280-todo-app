@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    tools:context=".LoginActivity$RegisterSectionFragment">
+    
+    <TextView
+        android:id="@+id/fragment_register_username_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Username:" />
+
+    <EditText
+        android:id="@+id/fragment_register_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/fragment_register_username_label"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/fragment_register_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fragment_register_password_label"
+        android:layout_below="@+id/fragment_register_password_label"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    
+    <TextView
+        android:id="@+id/fragment_register_password_confirm_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fragment_register_password"
+        android:layout_below="@+id/fragment_register_password"
+        android:text="Confirm Password: " />
+
+    <EditText
+        android:id="@+id/fragment_register_confirm_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fragment_register_password_confirm_label"
+        android:layout_below="@+id/fragment_register_password_confirm_label"
+        android:ems="10"
+        android:inputType="textPassword" />
+    
+    <Button
+        android:id="@+id/fragment_register_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fragment_register_confirm_password"
+        android:layout_below="@+id/fragment_register_confirm_password"
+        android:layout_marginTop="41dp"
+        android:text="Register" />
+
+    <TextView
+        android:id="@+id/fragment_register_password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/fragment_register_username"
+        android:layout_marginTop="44dp"
+        android:text="Password:" />
+
+</RelativeLayout>
