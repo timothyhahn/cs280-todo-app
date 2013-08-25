@@ -1,6 +1,5 @@
 package com.example.TodoApp;
 
-import java.io.Serializable;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -17,13 +16,17 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class LoginActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -60,9 +63,18 @@ public class LoginActivity extends FragmentActivity implements
 			tpt.setClient(httpclient);
 			tpt.setPreferences(settings);
 			tpt.execute(postURL, TodoPostTask.LOGIN, username, password);
-			
-			Intent listIntent = new Intent(this, TodoHome.class);
-			startActivity(listIntent);
+			JsonParser jp = new JsonParser();
+			JsonElement root = null;
+			root = jp.parse(responseJSON);
+			JsonObject rootobj = root.getAsJsonObject();
+			int id = rootobj.get("id").getAsInt();
+			if (id > 0) {
+				Intent listIntent = new Intent(this, TodoHome.class);
+				startActivity(listIntent);
+			} else {
+				TextView errorText = (TextView)findViewById(R.id.fragment_login_error);
+				errorText.setVisibility(View.VISIBLE);
+			}
 		}
 		*/
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
@@ -149,8 +161,6 @@ public class LoginActivity extends FragmentActivity implements
 	public static class LoginSectionFragment extends Fragment {
 		public LoginSectionFragment(){
 		}
-
-		// TODO Auto-generated method stub
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -159,6 +169,9 @@ public class LoginActivity extends FragmentActivity implements
 			}
 
 			View view = inflater.inflate(R.layout.fragment_login, container, false);
+			
+			TextView errorText = (TextView)view.findViewById(R.id.fragment_login_error);
+			errorText.setVisibility(View.INVISIBLE);
 			
 			Button loginButton = (Button)view.findViewById(R.id.fragment_login_button);
 			final View accessView = view;
@@ -178,13 +191,23 @@ public class LoginActivity extends FragmentActivity implements
 					try {
 						responseJSON = tpt.get();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (ExecutionException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Log.v("hello", responseJSON);
+					// TODO Ensure it actually checks if login is valid
+					JsonParser jp = new JsonParser();
+					JsonElement root = null;
+					root = jp.parse(responseJSON);
+					JsonObject rootobj = root.getAsJsonObject();
+					int id = rootobj.get("id").getAsInt();
+					if (id > 0) {
+						Intent listIntent = new Intent(getActivity(), TodoHome.class);
+						getActivity().startActivity(listIntent);
+					} else {
+						TextView errorText = (TextView)accessView.findViewById(R.id.fragment_login_error);
+						errorText.setVisibility(View.VISIBLE);
+					}
 				}
 			});
 			return view;
@@ -223,10 +246,8 @@ public class LoginActivity extends FragmentActivity implements
 					try {
 						responseJSON = tpt.get();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (ExecutionException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					

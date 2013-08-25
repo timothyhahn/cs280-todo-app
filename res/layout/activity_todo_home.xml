@@ -4,19 +4,29 @@
     android:layout_height="match_parent"
     tools:context=".TodoHome" >
 
+    <ExpandableListView
+        android:id="@+id/task_expandable_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/category_spinner" >
+    </ExpandableListView>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Add" />
+
     <Spinner
         android:id="@+id/category_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
-
-    <ListView
-        android:id="@+id/task_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/category_spinner" >
-    </ListView>
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/add_button" />
 
 </RelativeLayout>

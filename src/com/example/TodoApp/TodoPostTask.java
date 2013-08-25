@@ -41,7 +41,7 @@ public class TodoPostTask extends AsyncTask<String, Integer, String>{
 		   String source=login+":"+pass;
 		   String ret="Basic "+Base64.encodeToString(source.getBytes(),Base64.URL_SAFE|Base64.NO_WRAP);
 		   return ret;
-		}
+	}
 	@Override
 	protected String doInBackground(String... params) {
 		HttpPost httppost;
@@ -63,6 +63,15 @@ public class TodoPostTask extends AsyncTask<String, Integer, String>{
 			editor.putString("password", password);
 			editor.commit();
 		}
+
+		if(action.equals(ADD)){
+			formValues.add(new BasicNameValuePair("description",params[2]));
+			formValues.add(new BasicNameValuePair("notes",params[3]));
+			formValues.add(new BasicNameValuePair("due_date",params[4]));
+			formValues.add(new BasicNameValuePair("category",params[5]));
+			formValues.add(new BasicNameValuePair("longitude", params[6]));
+			formValues.add(new BasicNameValuePair("latitude", params[7]));
+		}
 		if(action.equals(LOGIN)){
 			String username = params[2];
 			String password = params[3];
@@ -73,7 +82,6 @@ public class TodoPostTask extends AsyncTask<String, Integer, String>{
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);

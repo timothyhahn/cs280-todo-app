@@ -7,6 +7,8 @@
     <string name="title_activity_login">TodoApp</string>
     <string name="login_title">Login</string>
     <string name="register_title">Register</string>
-	<string name="drawer_open">Open</string>
-	<string name="drawer_close">Close</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="title_activity_add_task">AddTaskActivity</string>
+
 </resources>
