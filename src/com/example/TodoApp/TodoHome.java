@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -41,13 +43,12 @@ public class TodoHome extends Activity {
 
 		settings = getSharedPreferences(PREFS_NAME, 0);
 		httpclient = LoginActivity.httpclient;
-
-	
 		
 		Button addButton = (Button)findViewById(R.id.add_button);
 		Clicky clicky = new Clicky(this);
 		addButton.setOnClickListener(clicky);
 	}
+	
 	@Override
 	protected void onResume(){
 		super.onResume();
@@ -79,12 +80,14 @@ public class TodoHome extends Activity {
 			String description = task.get("description").getAsString();
 			String due_date = task.get("due_date").getAsString();
 			String notes = task.get("notes").getAsString();
+			String id = task.get("id").getAsString();
 			
 			HashMap<String, String> taskHash = new HashMap<String, String>();
 			taskHash.put("description", description);
 			taskHash.put("category_name", category_name);
 			taskHash.put("complete", complete);
 			taskHash.put("due_date", due_date);
+			taskHash.put("id", id);
 			taskHeaderList.add(taskHash);
 			taskNotesList.put(description, notes);
 		}
@@ -93,7 +96,9 @@ public class TodoHome extends Activity {
 		taskListView = (ExpandableListView)findViewById(R.id.task_expandable_list);
 		taskListAdapter = new TaskListAdapter(this, taskHeaderList, taskNotesList);
 		taskListView.setAdapter(taskListAdapter);
-
+		
+		LongClicky longClicky = new  LongClicky(this);
+		taskListView.setOnItemLongClickListener(longClicky);
 		TodoGetTask tgtc = new TodoGetTask();
 		tgtc.setClient(httpclient);
 		tgtc.setPreferences(settings);
@@ -103,10 +108,8 @@ public class TodoHome extends Activity {
 		try {
 			categoryJSON = tgtc.get();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ArrayList<String> categoryList = new ArrayList<String>();
@@ -127,9 +130,71 @@ public class TodoHome extends Activity {
 		String[] categoryArray = new String[categoryList.size()];
 		categoryArray = categoryList.toArray(categoryArray);
 		
+		final ArrayList<String> accessList = categoryList;
+		
 		final Spinner categorySpinner = (Spinner) findViewById(R.id.category_spinner);
 		ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryArray);
 		categorySpinner.setAdapter(categoryAdapter);
+		categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view,
+					int i, long l) {
+				/**
+				Log.v("hello",accessList.get(i));
+
+
+				TodoGetTask tgt = new TodoGetTask();
+				tgt.setClient(httpclient);
+				tgt.setPreferences(settings);
+				tgt.execute("http://tyh25-cs280-todo.herokuapp.com/task?category="+accessList.get(i));
+				String responseJSON ="";
+				try {
+					responseJSON = tgt.get();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				
+				taskHeaderList = new ArrayList<HashMap<String,String>>();
+				taskNotesList = new HashMap<String, String>();
+				
+				JsonParser jp = new JsonParser();
+				JsonElement root = null;
+				root = jp.parse(responseJSON);
+				JsonObject rootobj = root.getAsJsonObject();
+				JsonArray tasks = rootobj.get("tasks").getAsJsonArray();
+				for(int i1 = 0; i1 < tasks.size(); i1++){
+					JsonObject task = tasks.get(i1).getAsJsonObject();
+					String category_name = task.get("category_name").getAsString();
+					String complete = task.get("complete").getAsString();
+					String description = task.get("description").getAsString();
+					String due_date = task.get("due_date").getAsString();
+					String notes = task.get("notes").getAsString();
+					String id = task.get("id").getAsString();
+					
+					HashMap<String, String> taskHash = new HashMap<String, String>();
+					taskHash.put("description", description);
+					taskHash.put("category_name", category_name);
+					taskHash.put("complete", complete);
+					taskHash.put("due_date", due_date);
+					taskHash.put("id", id);
+					taskHeaderList.add(taskHash);
+					taskNotesList.put(description, notes);
+				}
+				
+
+				taskListView = (ExpandableListView)view.findViewById(R.id.task_expandable_list);
+				taskListAdapter = new TaskListAdapter(view.getContext(), taskHeaderList, taskNotesList);
+				taskListView.setAdapter(taskListAdapter);
+				**/
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+		});
 	}
 	class Clicky implements OnClickListener{
 		private Activity activity;
@@ -144,6 +209,28 @@ public class TodoHome extends Activity {
 		}
 		
 		
+	}
+	class LongClicky implements OnItemLongClickListener{
+		private Activity activity;
+		public LongClicky(Activity activity){
+			this.activity = activity;
+		}
+		@Override
+	    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+	    	Log.v("position", String.valueOf(position));
+	    	
+			HashMap<String,String> taskHash = taskHeaderList.get(position);
+			String taskNotes = taskNotesList.get(taskHash.get("description"));
+
+			Intent listIntent = new Intent(activity, AddTaskActivity.class);
+			listIntent.putExtra("id", taskHash.get("id"));
+			listIntent.putExtra("description", taskHash.get("description"));
+			listIntent.putExtra("category", taskHash.get("category_name"));
+			listIntent.putExtra("due_date", taskHash.get("due_date"));
+			listIntent.putExtra("notes", taskNotes);
+			activity.startActivity(listIntent);
+	    	return true;
+	    }
 	}
 	
 	@Override

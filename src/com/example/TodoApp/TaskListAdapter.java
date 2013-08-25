@@ -25,7 +25,6 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 	
 	@Override
 	public Object getChild(int groupPosition, int childPosition){
-		Log.v("is selecting", "selecting");
 		return taskNotesList.get(this.taskHeaderList.get(groupPosition).get("description"));
 	}
 	
@@ -36,8 +35,6 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 	
 	@Override
 	public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent){
-		
-		Log.v("is selecting", "selecting");
 		final String taskDescriptionText = (String) getChild(groupPosition, childPosition);
 		
 		if (convertView == null){
@@ -47,7 +44,6 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 		TextView taskDescriptionView = (TextView)convertView.findViewById(R.id.taskNotes);
 		taskDescriptionView.setText(taskDescriptionText);
 
-		Log.v("is selecting", taskDescriptionText);
 		return convertView;
 	}
 	
@@ -90,12 +86,9 @@ public class TaskListAdapter extends BaseExpandableListAdapter{
 		}
 		
 		TextView taskDescriptionView = (TextView)convertView.findViewById(R.id.taskDescription);
-		//CheckBox taskDescriptionBox = (CheckBox)convertView.findViewById(R.id.taskCheckBox);
 		TextView taskCategoryView = (TextView)convertView.findViewById(R.id.taskCategory);
 		TextView taskDueDateView = (TextView)convertView.findViewById(R.id.taskDueDate);
 	
-	//	taskDescriptionBox.setText(taskDescription);
-		//taskDescriptionBox.setChecked(taskCompleted);
 		taskDescriptionView.setText(taskDescription);
 		taskCategoryView.setText(taskCategory);
 		taskDueDateView.setText(taskDueDate);

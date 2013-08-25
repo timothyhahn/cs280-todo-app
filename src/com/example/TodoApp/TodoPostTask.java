@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 
 public class TodoPostTask extends AsyncTask<String, Integer, String>{
 	HttpClient httpclient;
@@ -71,6 +72,7 @@ public class TodoPostTask extends AsyncTask<String, Integer, String>{
 			formValues.add(new BasicNameValuePair("category",params[5]));
 			formValues.add(new BasicNameValuePair("longitude", params[6]));
 			formValues.add(new BasicNameValuePair("latitude", params[7]));
+			formValues.add(new BasicNameValuePair("complete", params[8]));
 		}
 		if(action.equals(LOGIN)){
 			String username = params[2];
@@ -95,10 +97,8 @@ public class TodoPostTask extends AsyncTask<String, Integer, String>{
 		try {
 			responseBody = EntityUtils.toString(entity);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return responseBody;
